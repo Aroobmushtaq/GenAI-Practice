@@ -1,7 +1,6 @@
 # Import necessary libraries
 from transformers import pipeline
-from ipywidgets import widgets
-from IPython.display import display
+import streamlit as st
 
 # Load a text generation model (which can be used for generating health suggestions)
 suggestion_model = pipeline("text-generation", model="gpt2", max_length=50)
@@ -43,28 +42,16 @@ def correct_typos(query):
     }
     return corrections.get(query, query)
 
-# Create input and output boxes using ipywidgets
-input_box = widgets.Text(description="Health Query:")
-output_box = widgets.Textarea(description="Suggested Reason:")
+# Create the Streamlit app layout
+st.title("Health Query Suggestion App")
 
-# Create a submit button
-submit_button = widgets.Button(description="Submit")
+# Input box for health query
+query = st.text_input("Health Query:")
 
-# Function to handle the user's query submission
-def on_submit(button):
-    query = input_box.value.lower()  # Get the user's input and make it lowercase
+# Button to submit the query
+if st.button("Submit"):
     if query:
-        try:
-            # Get a predefined or generated response
-            response = get_health_reason(query)
-            output_box.value = response  # Display the response in the output box
-        except Exception as e:
-            output_box.value = f"Error: {str(e)}"  # Display any errors that occur
+        response = get_health_reason(query)  # Get the response
+        st.text_area("Suggested Reason:", response)  # Display the response
     else:
-        output_box.value = "Please enter a health query."
-
-# Bind the button click event to the submit function
-submit_button.on_click(on_submit)
-
-# Display the input box, submit button, and output box
-display(input_box, submit_button, output_box)
+        st.warning("Please enter a health query.")
