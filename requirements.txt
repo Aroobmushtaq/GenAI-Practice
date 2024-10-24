@@ -1,3 +1,7 @@
 streamlit==1.22.0
 transformers==4.27.2
-torch==2.2.0  # or the latest version that is compatible
+torch==2.2.0
+tokenizers==0.13.2
+numpy
+pandas
+
